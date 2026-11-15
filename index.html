@@ -34,272 +34,173 @@
 </script>
 <style>
   :root {
-    --black: #0a0a0a;
-    --bone: #ece8e1;
-    --dim: #8f8a84;
-    --heat: #ff5a1f;
-    --glass: rgba(16,16,16,.46);
-    --edge: rgba(255,255,255,.09);
-    --gutter: clamp(16px, 4vw, 56px);
-    --max: 1180px;
+    --bg: #0b0b0c; --panel: #121213; --bone: #ece8e1; --dim: #8d8985; --faint: #5c5956;
+    --heat: #ff5a1f; --edge: rgba(255,255,255,.1);
+    --gutter: clamp(20px, 5vw, 64px); --max: 1200px;
     --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
     --serif: "Instrument Serif", Georgia, serif;
-    --ease: cubic-bezier(.2,.7,.2,1);
     --out: cubic-bezier(.16,1,.3,1);
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0; background: var(--black); color: var(--bone);
-    font-family: var(--sans); font-size: 17px; line-height: 1.5;
-    -webkit-font-smoothing: antialiased; overflow-x: hidden; text-rendering: optimizeLegibility;
-  }
-  h1, h2, h3 { text-wrap: balance; }
-  p { text-wrap: pretty; }
-  a { color: inherit; }
-  em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
-  em.hot { color: var(--heat); }
-  ::selection { background: var(--heat); color: var(--black); }
-
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   html[lang="en"] [lang="fr"] { display: none !important; }
   html[lang^="fr"] [lang="en"]:not(html) { display: none !important; }
-
-  /* One continuous backdrop for the whole page */
-  #bg {
-    position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; display: block;
-    background: radial-gradient(60% 50% at 70% 60%, #ff7a2a 0%, #c41d0a 35%, #3a0610 65%, #0a0a0a 100%);
+  body {
+    margin: 0; background: var(--bg); color: var(--bone); font-family: var(--sans);
+    font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
-  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
-
-  /* Glass */
-  .glass {
-    background: var(--glass); border: 1px solid var(--edge);
-    backdrop-filter: blur(18px) saturate(130%); -webkit-backdrop-filter: blur(18px) saturate(130%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 30px 60px -30px rgba(0,0,0,.6);
+  /* Paper grain over the graphite */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+  #stage { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; pointer-events: none; }
+  a { color: inherit; }
+  em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+  .hot { color: var(--heat); }
+  h1, h2, h3, p { margin: 0; }
+  .wrap { position: relative; z-index: 1; max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+  section { padding: clamp(88px, 13vw, 170px) 0; position: relative; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-bottom: clamp(28px, 4vw, 48px); }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--heat); }
+  .col { max-width: 600px; }
 
   /* Nav */
-  .nav {
-    position: fixed; top: 14px; left: var(--gutter); right: var(--gutter); z-index: 50;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .mark, .pill { border-radius: 999px; text-decoration: none; }
-  .mark { font-weight: 600; font-size: 15px; padding: 10px 16px; }
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px var(--gutter); background: linear-gradient(rgba(11,11,12,.92), rgba(11,11,12,0)); }
+  .mark { font-weight: 600; font-size: 18px; letter-spacing: -.02em; text-decoration: none; }
   .mark span { color: var(--heat); }
-  .nav-r { display: flex; gap: 8px; flex-shrink: 0; }
-  .nav { max-width: calc(100vw - 2 * var(--gutter)); }
-  .pill {
-    font: 500 14px var(--sans); color: var(--bone); cursor: pointer; padding: 10px 16px;
-    transition: background .25s;
-  }
-  .pill:hover { background: rgba(236,232,225,.14); }
-  .pill.solid { background: var(--bone); color: var(--black); border-color: var(--bone); }
-  .pill.solid:hover { background: #fff; }
+  .nav-r { display: flex; align-items: center; gap: clamp(6px, 1.6vw, 22px); font-size: 14px; }
+  .nav-r a, .nav-r button { color: var(--bone); text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; padding: 8px 6px; opacity: .78; transition: opacity .2s; }
+  .nav-r a:hover, .nav-r button:hover, .nav-r a.on { opacity: 1; }
+  .nav-r a.on:not(.solid) { color: var(--heat); }
+  .nav-r .lang { border: 1px solid var(--edge); border-radius: 999px; padding: 7px 12px; font-size: 12px; letter-spacing: .08em; }
+  .nav-r .solid { opacity: 1; background: var(--bone); color: #0b0b0c; border-radius: 999px; padding: 9px 16px; font-weight: 600; }
   .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 60; background: var(--heat); transform-origin: 0 50%; transform: scaleX(0); }
 
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 12px; background: var(--bone); color: #0b0b0c; text-decoration: none; font-weight: 600; font-size: 16px; padding: 16px 26px; border-radius: 999px; transition: transform .35s var(--out), background .2s; }
+  .btn:hover { transform: translateY(-2px); background: #fff; }
+  .btn .arr { transition: transform .35s var(--out); }
+  .btn:hover .arr { transform: translateX(5px); }
+  .btn.ghost { background: var(--bg); color: var(--bone); border: 1px solid var(--edge); }
+  .btn.ghost:hover { background: #1a1a1c; }
+
   /* Hero */
-  .hero { min-height: 100svh; display: flex; align-items: flex-end; position: relative; }
-  .hero::after {
-    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(180deg, rgba(10,10,10,.3) 0%, transparent 28%, transparent 50%, rgba(10,10,10,.7) 100%);
-  }
-  .hero .wrap { width: 100%; padding-bottom: clamp(28px, 5vw, 56px); }
-  h1 { margin: 0; font-weight: 600; letter-spacing: -.045em; line-height: .94; font-size: clamp(46px, 8vw, 128px); max-width: 14ch; }
-  .hero-row {
-    display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;
-    margin-top: clamp(22px, 3vw, 36px); padding-top: 22px; border-top: 1px solid rgba(236,232,225,.25);
-  }
-  .hero-row p { margin: 0; max-width: 30em; font-size: clamp(17px, 1.5vw, 20px); color: rgba(236,232,225,.9); }
-  .ctas { display: flex; gap: 8px; flex-wrap: wrap; }
-  .btn {
-    position: relative; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
-    font: 600 16px var(--sans); padding: 15px 22px; border-radius: 999px;
-    background: var(--bone); color: var(--black); border: 1px solid var(--bone);
-    transition: background .25s, transform .35s var(--ease); will-change: transform;
-  }
-  .btn:hover { background: #fff; }
-  .btn .arr { transition: transform .25s; }
-  .btn:hover .arr { transform: translateX(3px); }
-  .btn.ghost { background: rgba(10,10,10,.3); color: var(--bone); border-color: rgba(236,232,225,.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-  .btn.ghost:hover { background: rgba(236,232,225,.12); }
+  .hero { min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 120px 0 80px; position: relative; }
+  .hero .wrap { width: 100%; }
+  .hero h1 { font-weight: 600; letter-spacing: -.045em; line-height: .98; font-size: clamp(46px, 6vw, 92px); }
+  .hero h1 em { display: block; letter-spacing: -.02em; }
+  .hero .lede { margin-top: clamp(22px, 3vw, 34px); max-width: 30em; color: rgba(236,232,225,.74); font-size: clamp(16px, 1.35vw, 19px); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(26px, 3.4vw, 40px); }
+  .scrollcue { position: absolute; left: var(--gutter); bottom: 28px; z-index: 1; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 10px; }
+  .scrollcue::after { content: ""; width: 1px; height: 34px; background: linear-gradient(var(--faint), transparent); animation: cue 2.2s ease-in-out infinite; transform-origin: top; }
+  @keyframes cue { 0%,100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
 
   /* Ticker */
-  .ticker { overflow: hidden; white-space: nowrap; padding: 16px 0; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: rgba(236,232,225,.6); border-top: 1px solid var(--edge); border-bottom: 1px solid var(--edge); background: rgba(10,10,10,.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  .ticker-track { display: inline-flex; animation: tick 40s linear infinite; }
-  .ticker-track span { padding: 0 26px; }
-  .ticker-track span::before { content: "✦"; color: var(--heat); margin-right: 26px; }
+  .ticker { position: relative; z-index: 1; border-block: 1px solid var(--edge); overflow: hidden; padding: 16px 0; background: rgba(11,11,12,.7); }
+  .ticker-track { display: flex; width: max-content; animation: tick 38s linear infinite; }
+  .ticker-track span { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); padding: 0 28px; white-space: nowrap; position: relative; }
+  .ticker-track span::after { content: ""; position: absolute; right: -3px; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: var(--heat); transform: translateY(-50%); }
   @keyframes tick { to { transform: translateX(-50%); } }
 
-  section { padding: clamp(96px, 14vw, 180px) 0; }
-  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 0 0 28px; }
-  .eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--heat); }
-
-  /* Statement: words light up as you scroll */
-  .statement .split { margin: 0; font-weight: 500; letter-spacing: -.035em; line-height: 1.06; font-size: clamp(34px, 5.4vw, 80px); max-width: 16ch; }
-  .statement .note { margin: 36px 0 0; max-width: 34em; font-size: clamp(17px, 1.5vw, 20px); color: rgba(236,232,225,.72); }
-  .statement .w { opacity: .16; transition: opacity .25s linear; }
+  /* Statement */
+  .statement .split { font-weight: 500; letter-spacing: -.035em; line-height: 1.08; font-size: clamp(32px, 5vw, 76px); max-width: 17ch; }
+  .statement .w { opacity: .14; transition: opacity .3s linear; }
   .statement .w.lit { opacity: 1; }
+  .statement .note { margin-top: 36px; max-width: 32em; color: var(--dim); font-size: clamp(16px, 1.4vw, 19px); }
 
-  /* Tilt cards */
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; perspective: 1100px; }
-  .tilt {
-    --rx: 0deg; --ry: 0deg; --gx: 50%; --gy: 50%; --ga: 0;
-    position: relative; border-radius: 22px; padding: 30px 28px 32px; min-height: 340px;
-    display: flex; flex-direction: column; overflow: hidden;
-    transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d;
-    transition: transform .6s var(--ease), border-color .3s; will-change: transform;
-  }
-  .tilt.live { transition: transform .08s linear, border-color .3s; }
-  .tilt:hover { border-color: rgba(255,90,31,.35); }
-  .tilt::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
-    background: radial-gradient(420px circle at var(--gx) var(--gy), rgba(255,170,120,.16), transparent 45%);
-    opacity: var(--ga); transition: opacity .4s;
-  }
-  .tilt > * { transform: translateZ(28px); }
-  .card-top { display: flex; justify-content: space-between; align-items: center; }
-  .num { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--heat); }
-  .glyph { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,90,31,.1); border: 1px solid rgba(255,90,31,.25); }
-  .tilt h3 { margin: auto 0 10px; font-weight: 600; letter-spacing: -.035em; font-size: clamp(30px, 3vw, 42px); line-height: 1; }
-  .tilt p { margin: 0; color: rgba(236,232,225,.72); font-size: 16.5px; }
+  /* Services and steps: ruled rows */
+  .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge); }
+  .rows li { display: grid; grid-template-columns: 56px 1fr; gap: 8px; padding: clamp(24px, 3vw, 36px) 0; border-bottom: 1px solid var(--edge); }
+  .rows .num { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--heat); line-height: 1.3; }
+  .rows h3 { font-size: clamp(22px, 2.3vw, 30px); font-weight: 600; letter-spacing: -.03em; line-height: 1.15; }
+  .rows p { margin-top: 10px; color: rgba(236,232,225,.68); max-width: 30em; }
 
-  .steps { list-style: none; margin: 0; padding: 0; }
-  .steps li { display: grid; grid-template-columns: 90px 1fr; gap: 20px; align-items: baseline; padding: 30px 0; border-top: 1px solid rgba(236,232,225,.18); }
-  .steps li:last-child { border-bottom: 1px solid rgba(236,232,225,.18); }
-  .steps .num { font-size: 30px; }
-  .steps h3 { margin: 0 0 8px; font-weight: 600; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(28px, 4vw, 56px); }
-  .steps p { margin: 0; max-width: 34em; color: rgba(236,232,225,.72); font-size: 17px; }
-
-  /* Deal */
-  .deal { text-align: center; }
-  .deal h2 { margin: 0 auto; font-weight: 600; letter-spacing: -.045em; line-height: .98; font-size: clamp(40px, 7vw, 108px); max-width: 13ch; }
-  .terms { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
-  .terms span { border-radius: 999px; padding: 10px 18px; font-size: 15px; color: rgba(236,232,225,.88); }
-  .prices { display: grid; grid-template-columns: repeat(3, minmax(0, 300px)); justify-content: center; gap: 18px; margin-top: 52px; perspective: 1100px; }
-  .prices .tilt { min-height: 0; text-align: left; padding: 26px 28px; }
-  .prices small { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
-  .prices b { display: block; margin-top: 10px; font-weight: 600; font-size: clamp(34px, 3.6vw, 48px); letter-spacing: -.04em; line-height: 1; }
-  .prices b i { font-style: normal; font-size: .42em; color: var(--dim); letter-spacing: 0; font-weight: 500; }
-  .prices p { margin-top: 10px; font-size: 15px; }
-
-  .anchor { margin: 28px auto 0; color: var(--dim); font-size: 16px; }
+  /* The deal: one hot panel behind fluted glass */
+  .flute { position: relative; isolation: isolate; overflow: hidden; box-shadow: 0 0 140px -50px rgba(255,90,31,.5); border-radius: clamp(20px, 2.6vw, 32px); border: 1px solid var(--edge); background: #150806; padding: clamp(44px, 7vw, 104px) clamp(24px, 5vw, 72px); }
+  .flute::before { content: ""; position: absolute; inset: -25%; z-index: -2; filter: blur(34px); animation: heat 16s ease-in-out infinite alternate;
+    background: radial-gradient(38% 52% at 24% 62%, #ff7a2a 0, transparent 70%), radial-gradient(34% 50% at 72% 38%, #d81e0e 0, transparent 70%), radial-gradient(26% 36% at 56% 84%, #ffc46b 0, transparent 70%); }
+  .flute::after { content: ""; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(rgba(12,4,2,.2), rgba(12,4,2,.55)), linear-gradient(90deg, rgba(0,0,0,.5) 0, rgba(255,255,255,.13) 7%, rgba(255,255,255,0) 42%, rgba(0,0,0,.3) 100%);
+    background-size: 100% 100%, clamp(30px, 4.4vw, 60px) 100%; }
+  @keyframes heat { to { transform: translate(7%, -5%) scale(1.18) rotate(7deg); } }
+  .flute canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; display: block; }
+  .flute.gl::before, .flute.gl::after { display: none; }
+  .flute h2 { font-weight: 600; letter-spacing: -.04em; line-height: 1; font-size: clamp(38px, 6.2vw, 96px); max-width: 12ch; text-shadow: 0 2px 30px rgba(0,0,0,.35); }
+  .flute h2 em { color: #fff; }
+  .terms { display: flex; flex-wrap: wrap; gap: 10px; margin-top: clamp(24px, 3vw, 40px); }
+  .terms span { font-size: 13px; letter-spacing: .04em; padding: 8px 14px; border-radius: 999px; background: rgba(0,0,0,.38); border: 1px solid rgba(255,255,255,.16); }
+  .anchor { margin-top: clamp(40px, 5vw, 64px); color: var(--dim); font-size: clamp(17px, 1.6vw, 21px); }
+  .prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+  .price { background: var(--panel); border: 1px solid var(--edge); border-radius: 20px; padding: clamp(22px, 2.4vw, 32px); transition: border-color .3s, transform .4s var(--out); }
+  .price:hover { border-color: rgba(255,90,31,.5); transform: translateY(-4px); }
+  .price small { display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+  .price b { display: block; margin: 14px 0 12px; font-size: clamp(44px, 4.6vw, 64px); font-weight: 600; letter-spacing: -.045em; line-height: 1; }
+  .price b i { font-family: var(--serif); font-size: .38em; font-weight: 400; color: var(--dim); letter-spacing: 0; }
+  .price p { color: rgba(236,232,225,.68); font-size: 15.5px; }
 
   /* Contact */
-  .contact { min-height: 92svh; display: flex; align-items: center; text-align: center; }
+  .contact { min-height: 92vh; display: flex; align-items: center; }
   .contact .wrap { width: 100%; }
-  .contact h2 { margin: 0 auto 34px; font-weight: 600; letter-spacing: -.045em; line-height: .95; font-size: clamp(40px, 6.4vw, 96px); max-width: 15ch; margin-left: auto; margin-right: auto; }
-  .mailbtn { font-size: clamp(16px, 1.8vw, 20px); padding: 18px 28px; }
-  .contact .alt { margin-top: 22px; color: var(--dim); font-size: 15px; line-height: 1.9; overflow-wrap: anywhere; }
-  .contact .alt a { color: var(--bone); }
-  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 22px var(--gutter); font-size: 13px; color: #77716b; border-top: 1px solid var(--edge); background: rgba(10,10,10,.6); }
+  .contact h2 { font-weight: 600; letter-spacing: -.045em; line-height: 1; font-size: clamp(40px, 5.4vw, 80px); }
+  .contact h2 em { display: block; }
+  .contact .btn { margin-top: clamp(28px, 3.4vw, 44px); }
+  .contact .alt { margin-top: 18px; color: var(--dim); font-size: 15.5px; }
+  .contact .alt a { color: var(--bone); text-underline-offset: 4px; overflow-wrap: anywhere; }
+  footer { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 16px; padding: 22px var(--gutter); border-top: 1px solid var(--edge); color: var(--faint); font-size: 13px; }
 
   /* Reveal */
-  .js .rv { opacity: 0; transform: translateY(18px); filter: blur(6px);
-    transition: opacity 1.1s var(--out), transform 1.3s var(--out), filter 1.1s var(--out); }
-  .js .rv.on { filter: none; }
-  .js .hero .rv.d1 { transition-delay: .55s; }
-  .js .hero .rv.d2 { transition-delay: .75s; }
-  .js .hero .hero-row { border-top-color: transparent; }
-  .js .hero.ready .hero-row { border-top-color: rgba(236,232,225,.25); transition: border-color 1.4s var(--out) .45s; }
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity .9s var(--out), transform .9s var(--out); transition-delay: calc(var(--i, 0) * 90ms); }
+  .rv.in { opacity: 1; transform: none; }
 
-  /* Headings rise word by word out of a mask */
-  .wm { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .06em .12em; margin: 0 -.06em -.12em; }
-  .wi { display: inline-block; }
-  .js .ws .wi {
-    transform: translateY(108%) rotate(4deg); transform-origin: 0 100%; opacity: 0;
-    transition: transform 1.25s var(--out) calc(var(--i) * 60ms), opacity .9s var(--out) calc(var(--i) * 60ms);
-  }
-  .js .ws.in .wi { transform: none; opacity: 1; }
-
-  /* Hero headline: letters cascade up one at a time */
-  .ch { display: inline-block; }
-  .js .hc .ch {
-    transform: translateY(115%); opacity: 0;
-    transition: transform 1.1s var(--out) calc(var(--c) * 24ms + 120ms), opacity .7s var(--out) calc(var(--c) * 24ms + 120ms);
-  }
-  .js .hc.in .ch { transform: none; opacity: 1; }
-
-  /* Section headlines: wiped in from the left */
-  .js .wipe { clip-path: inset(-.25em 100% -.35em -.1em); transform: translateX(-24px); transition: clip-path 1.5s var(--out), transform 1.5s var(--out); }
-  .js .wipe.in { clip-path: inset(-.25em -.3em -.35em -.1em); transform: none; }
-
-  /* Cards: swing up into place in 3D, one after another */
-  .js .flip { opacity: 0; transform: translateY(70px) rotateX(-32deg) scale(.96); transform-origin: 50% 100%;
-    transition: transform 1.4s var(--out) calc(var(--k) * 130ms), opacity 1s var(--out) calc(var(--k) * 130ms), border-color .3s; }
-  .js .flip.in { opacity: 1; transform: rotateX(var(--rx)) rotateY(var(--ry)); }
-
-  /* Steps: the divider draws across, then the step slides in */
-  .js .draw { border-top-color: transparent; position: relative; }
-  .js .draw::before { content: ""; position: absolute; top: -1px; left: 0; right: 0; height: 1px; background: rgba(236,232,225,.18); transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.4s var(--out); }
-  .js .draw > * { opacity: 0; transform: translateX(-28px); transition: opacity 1s var(--out) .25s, transform 1.2s var(--out) .25s; }
-  .js .draw.in::before { transform: scaleX(1); }
-  .js .draw.in > * { opacity: 1; transform: none; }
-
-  /* Chips pop in */
-  .js .pop span { opacity: 0; transform: translateY(12px) scale(.86); transition: opacity .7s var(--out) calc(var(--k) * 90ms + .2s), transform .9s cubic-bezier(.34,1.56,.64,1) calc(var(--k) * 90ms + .2s); }
-  .js .pop.in span { opacity: 1; transform: none; }
-
-  /* Eyebrows: the line draws, the letters tighten */
-  .js .eyebrow::before { transform: scaleX(0); transform-origin: 0 50%; transition: transform 1s var(--out); }
-  .js .eyebrow span { display: inline-block; opacity: 0; letter-spacing: .5em; transition: opacity 1s var(--out) .15s, letter-spacing 1.4s var(--out) .15s; }
-  .js .eyebrow.in::before { transform: none; }
-  .js .eyebrow.in span { opacity: 1; letter-spacing: .14em; }
-  .js .rv.on { opacity: 1; transform: none; }
-  .js .cards .rv:nth-child(2) { transition-delay: .1s; }
-  .js .cards .rv:nth-child(3) { transition-delay: .2s; }
-  .js .tilt.rv.on { transform: rotateX(var(--rx)) rotateY(var(--ry)); }
-
-  @media (max-width: 900px) {
-    .cards { grid-template-columns: 1fr; }
-    .tilt { min-height: 240px; }
-    .prices { grid-template-columns: 1fr; max-width: 340px; margin-left: auto; margin-right: auto; }
-  }
-  @media (max-width: 640px) {
-    .nav .pill:not(.lang):not(.solid) { display: none; }
+  @media (max-width: 899px) {
+    .col { max-width: none; }
+    .nav-r a:not(.solid) { display: none; }
+    .hero { align-items: flex-start; padding: 104px 0 50svh; }
+    .scrollcue { display: none; }
     .prices { grid-template-columns: 1fr; }
-    .steps li { grid-template-columns: 1fr; gap: 6px; }
-    .hero-row { flex-direction: column; align-items: flex-start; }
+    .flute { padding-bottom: 64%; }
+    .contact { align-items: flex-end; padding-top: 52svh; min-height: 100svh; }
+    .rows li { grid-template-columns: 40px 1fr; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .ticker-track { animation: none; }
-    .js .rv { opacity: 1; transform: none; filter: none; transition: none; }
-    .js .ws .wi { transform: none; opacity: 1; transition: none; }
-    .js .hc .ch, .js .wipe, .js .flip, .js .draw::before, .js .draw > *, .js .pop span, .js .eyebrow::before, .js .eyebrow span { transition: none !important; }
-    .js .hero .hero-row { border-top-color: rgba(236,232,225,.25); }
-    .statement .w { opacity: 1; }
     html { scroll-behavior: auto; }
+    .rv { opacity: 1; transform: none; transition: none; }
+    .statement .w { opacity: 1; }
+    .ticker-track, .flute::before, .scrollcue::after { animation: none; }
   }
 </style>
-<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-
-<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="stage" aria-hidden="true"></canvas>
 <div class="progress" id="progress"></div>
 
 <nav class="nav" aria-label="Main">
-  <a class="mark glass" href="#">Emmanuel<span>.</span></a>
+  <a class="mark" href="#">Emmanuel<span>.</span></a>
   <div class="nav-r">
-    <a class="pill glass" href="#services"><span lang="en">Services</span><span lang="fr">Services</span></a>
-    <a class="pill glass" href="#deal"><span lang="en">Pricing</span><span lang="fr">Tarifs</span></a>
-    <button class="pill glass lang" id="lang" type="button" aria-label="Passer en français">FR</button>
-    <a class="pill solid" href="#contact"><span lang="en">Free preview</span><span lang="fr">Aperçu gratuit</span></a>
+    <a href="#services"><span lang="en">Services</span><span lang="fr">Services</span></a>
+    <a href="#how"><span lang="en">Process</span><span lang="fr">Démarche</span></a>
+    <a href="#deal"><span lang="en">Pricing</span><span lang="fr">Tarifs</span></a>
+    <button class="lang" id="lang" type="button" aria-label="Passer en français">FR</button>
+    <a class="solid" href="#contact"><span lang="en">Free preview</span><span lang="fr">Aperçu gratuit</span></a>
   </div>
 </nav>
 
-<header class="hero">
+<header class="hero" id="top">
   <div class="wrap">
-    <h1 lang="en">I'm Emmanuel. I build <em>websites that sell.</em></h1>
-    <h1 lang="fr">Moi, c'est Emmanuel. Je bâtis des <em>sites qui vendent.</em></h1>
-    <div class="hero-row">
-      <p class="rv d1" lang="en">I'm a Montreal web designer who builds custom sites for local businesses. I design, write and build yours before you spend a dollar. If you don't love it, you owe nothing.</p>
-      <p class="rv d1" lang="fr">Je suis concepteur web à Montréal et je crée des sites sur mesure pour les commerces d'ici. Je conçois, rédige et bâtis le vôtre avant que vous déboursiez un sou. S'il ne vous plaît pas, vous ne devez rien.</p>
-      <div class="ctas rv d2">
-        <a class="btn mag" href="#contact"><span lang="en">Get my free preview</span><span lang="fr">Obtenir mon aperçu gratuit</span> <span class="arr">→</span></a>
-        <a class="btn ghost mag" href="#how"><span lang="en">How it works</span><span lang="fr">Comment ça marche</span></a>
+    <div class="col">
+      <p class="eyebrow rv"><span lang="en">Web design · Montréal</span><span lang="fr">Conception web · Montréal</span></p>
+      <h1 class="rv" style="--i:1" lang="en">I'm Emmanuel. I build <em>websites that sell.</em></h1>
+      <h1 class="rv" style="--i:1" lang="fr">Moi, c'est Emmanuel. Je bâtis des <em>sites qui vendent.</em></h1>
+      <p class="lede rv" style="--i:2" lang="en">I'm a Montreal web designer who builds custom sites for local businesses. I design, write and build yours before you spend a dollar. If you don't love it, you owe nothing.</p>
+      <p class="lede rv" style="--i:2" lang="fr">Je suis concepteur web à Montréal et je crée des sites sur mesure pour les commerces d'ici. Je conçois, rédige et bâtis le vôtre avant que vous déboursiez un sou. S'il ne vous plaît pas, vous ne devez rien.</p>
+      <div class="ctas rv" style="--i:3">
+        <a class="btn" href="#contact"><span lang="en">Get my free preview</span><span lang="fr">Obtenir mon aperçu gratuit</span> <span class="arr">→</span></a>
+        <a class="btn ghost" href="#how"><span lang="en">How it works</span><span lang="fr">Comment ça marche</span></a>
       </div>
     </div>
   </div>
+  <div class="scrollcue" aria-hidden="true"><span lang="en">Scroll</span><span lang="fr">Défiler</span></div>
 </header>
 
 <div class="ticker" aria-hidden="true">
@@ -323,88 +224,79 @@
 
 <section id="services">
   <div class="wrap">
-    <p class="eyebrow"><span lang="en">What I do</span><span lang="fr">Ce que je fais</span></p>
-    <div class="cards">
-      <article class="tilt glass rv">
-        <div class="card-top"><span class="num">01</span>
-          <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></span></div>
-        <h3 lang="en">Website</h3><h3 lang="fr">Site web</h3>
-        <p lang="en">A custom site that shows why your business is worth the trip. Fast, bilingual and built for phones, where most people will find you.</p>
-        <p lang="fr">Un site sur mesure qui montre pourquoi votre commerce vaut le détour. Rapide, bilingue et pensé pour le cellulaire, là où la plupart des gens vous trouveront.</p>
-      </article>
-      <article class="tilt glass rv">
-        <div class="card-top"><span class="num">02</span>
-          <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span></div>
-        <h3 lang="en">Visibility</h3><h3 lang="fr">Visibilité</h3>
-        <p lang="en">Accurate hours, address and reviews wherever people search: Google, Apple Maps and AI assistants. Fewer customers lost along the way.</p>
-        <p lang="fr">Des heures, une adresse et des avis exacts partout où l'on vous cherche : Google, Apple Plans et assistants IA. Moins de clients perdus en chemin.</p>
-      </article>
-      <article class="tilt glass rv">
-        <div class="card-top"><span class="num">03</span>
-          <span class="glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span></div>
-        <h3 lang="en">Upkeep</h3><h3 lang="fr">Entretien</h3>
-        <p lang="en">New hours, new prices, a seasonal promo. Send a text and it's live within 48 hours. You never touch a login.</p>
-        <p lang="fr">Nouvelles heures, nouveaux prix, une promo saisonnière. Un texto, et c'est en ligne en 48 heures. Aucun mot de passe à retenir.</p>
-      </article>
+    <div class="col">
+      <p class="eyebrow"><span lang="en">What I do</span><span lang="fr">Ce que je fais</span></p>
+      <ul class="rows">
+        <li class="rv"><span class="num">01</span><div>
+          <h3 lang="en">Website</h3><h3 lang="fr">Site web</h3>
+          <p lang="en">A custom site that shows why your business is worth the trip. Fast, bilingual and built for phones, where most people will find you.</p>
+          <p lang="fr">Un site sur mesure qui montre pourquoi votre commerce vaut le détour. Rapide, bilingue et pensé pour le cellulaire, là où la plupart des gens vous trouveront.</p>
+        </div></li>
+        <li class="rv" style="--i:1"><span class="num">02</span><div>
+          <h3 lang="en">Visibility</h3><h3 lang="fr">Visibilité</h3>
+          <p lang="en">Accurate hours, address and reviews wherever people search: Google, Apple Maps and AI assistants. Fewer customers lost along the way.</p>
+          <p lang="fr">Des heures, une adresse et des avis exacts partout où l'on vous cherche : Google, Apple Plans et assistants IA. Moins de clients perdus en chemin.</p>
+        </div></li>
+        <li class="rv" style="--i:2"><span class="num">03</span><div>
+          <h3 lang="en">Upkeep</h3><h3 lang="fr">Entretien</h3>
+          <p lang="en">New hours, new prices, a seasonal promo. Send a text and it's live within 48 hours. You never touch a login.</p>
+          <p lang="fr">Nouvelles heures, nouveaux prix, une promo saisonnière. Un texto, et c'est en ligne en 48 heures. Aucun mot de passe à retenir.</p>
+        </div></li>
+      </ul>
     </div>
   </div>
 </section>
 
 <section id="how">
   <div class="wrap">
-    <p class="eyebrow"><span lang="en">How it works</span><span lang="fr">Comment ça marche</span></p>
-    <ol class="steps">
-      <li class="rv">
-        <span class="num">01</span>
-        <div>
+    <div class="col">
+      <p class="eyebrow"><span lang="en">How it works</span><span lang="fr">Comment ça marche</span></p>
+      <ol class="rows">
+        <li class="rv"><span class="num">01</span><div>
           <h3 lang="en">Send me your business name.</h3><h3 lang="fr">Envoyez-moi le nom de votre commerce.</h3>
           <p lang="en">No forms, no meetings. I study your business and reply within 24 hours.</p>
           <p lang="fr">Pas de formulaire, pas de rencontre. J'étudie votre commerce et je vous réponds en 24 heures.</p>
-        </div>
-      </li>
-      <li class="rv">
-        <span class="num">02</span>
-        <div>
+        </div></li>
+        <li class="rv" style="--i:1"><span class="num">02</span><div>
           <h3 lang="en">I design and build your site.</h3><h3 lang="fr">Je conçois et je bâtis votre site.</h3>
           <p lang="en">Within a week, you get a private link to the finished site. No deposit, no call.</p>
           <p lang="fr">En moins d'une semaine, vous recevez un lien privé vers le site terminé. Aucun dépôt, aucun appel.</p>
-        </div>
-      </li>
-      <li class="rv">
-        <span class="num">03</span>
-        <div>
+        </div></li>
+        <li class="rv" style="--i:2"><span class="num">03</span><div>
           <h3 lang="en">Approve it, and it goes live.</h3><h3 lang="fr">Vous l'approuvez, il est mis en ligne.</h3>
           <p lang="en">You pay only once you're happy with it. If it's not right, you owe nothing.</p>
           <p lang="fr">Vous payez seulement une fois satisfait. Sinon, vous ne devez rien.</p>
-        </div>
-      </li>
-    </ol>
+        </div></li>
+      </ol>
+    </div>
   </div>
 </section>
 
-<section class="deal" id="deal">
+<section id="deal">
   <div class="wrap">
     <p class="eyebrow"><span lang="en">The deal</span><span lang="fr">L'entente</span></p>
-    <h2 class="rv" lang="en">I build it first. You pay <em class="hot">if you love it.</em></h2>
-    <h2 class="rv" lang="fr">Je le bâtis d'abord. Vous payez <em class="hot">si vous l'aimez.</em></h2>
-    <div class="terms rv">
-      <span class="glass" lang="en">No deposit</span><span class="glass" lang="en">No contract</span><span class="glass" lang="en">Cancel upkeep anytime</span>
-      <span class="glass" lang="fr">Aucun dépôt</span><span class="glass" lang="fr">Aucun contrat</span><span class="glass" lang="fr">Entretien annulable en tout temps</span>
+    <div class="flute rv" id="flute">
+      <h2 lang="en">I build it first. You pay <em>if you love it.</em></h2>
+      <h2 lang="fr">Je le bâtis d'abord. Vous payez <em>si vous l'aimez.</em></h2>
+      <div class="terms">
+        <span lang="en">No deposit</span><span lang="en">No contract</span><span lang="en">Cancel upkeep anytime</span>
+        <span lang="fr">Aucun dépôt</span><span lang="fr">Aucun contrat</span><span lang="fr">Entretien annulable en tout temps</span>
+      </div>
     </div>
     <p class="anchor rv" lang="en">A fraction of agency pricing, with the same level of craft.</p>
     <p class="anchor rv" lang="fr">Une fraction du prix d'une agence, avec le même souci du détail.</p>
     <div class="prices">
-      <div class="tilt glass rv">
+      <div class="price rv">
         <small lang="en">Website · launch price</small><small lang="fr">Site web · prix de lancement</small>
         <b><span lang="en">$200</span><span lang="fr">200 $</span></b>
         <p lang="en">One-time. Design, copy and launch included. Yours to keep.</p><p lang="fr">Une seule fois. Design, textes et mise en ligne inclus. Il est à vous.</p>
       </div>
-      <div class="tilt glass rv">
+      <div class="price rv" style="--i:1">
         <small lang="en">Visibility</small><small lang="fr">Visibilité</small>
         <b><span lang="en">$250</span><span lang="fr">250 $</span></b>
         <p lang="en">One-time. Google profile, map listings and a review system, set up for you.</p><p lang="fr">Une seule fois. Fiche Google, cartes et système d'avis, configurés pour vous.</p>
       </div>
-      <div class="tilt glass rv">
+      <div class="price rv" style="--i:2">
         <small lang="en">Upkeep</small><small lang="fr">Entretien</small>
         <b><span lang="en">$45 <i>/ month</i></span><span lang="fr">45 $ <i>/ mois</i></span></b>
         <p lang="en">Hosting, updates and changes within 48 hours. Cancel anytime.</p><p lang="fr">Hébergement, mises à jour et changements en 48 heures. Annulable en tout temps.</p>
@@ -415,11 +307,13 @@
 
 <section class="contact" id="contact">
   <div class="wrap">
-    <h2 class="rv" lang="en">Send your business name. <em>I'll do the rest.</em></h2>
-    <h2 class="rv" lang="fr">Envoyez le nom de votre commerce. <em>Je m'occupe du reste.</em></h2>
-    <a class="btn mag mailbtn rv" href="mailto:emmanuel.maclaren.yansouni@gmail.com?subject=Free%20preview&body=My%20business%3A%20"><span lang="en">Get my free preview</span><span lang="fr">Obtenir mon aperçu gratuit</span> <span class="arr">→</span></a>
-    <p class="alt rv" style="margin-top:18px"><span lang="en">Free preview within a week. No obligation.</span><span lang="fr">Aperçu gratuit en moins d'une semaine. Sans engagement.</span></p>
-    <p class="alt rv"><a href="mailto:emmanuel.maclaren.yansouni@gmail.com">emmanuel.maclaren.yansouni@gmail.com</a><br><span lang="en">or text </span><span lang="fr">ou par texto au </span><a href="sms:+14387221921">438 722-1921</a></p>
+    <div class="col">
+      <h2 class="rv" lang="en">Send your business name. <em>I'll do the rest.</em></h2>
+      <h2 class="rv" lang="fr">Envoyez le nom de votre commerce. <em>Je m'occupe du reste.</em></h2>
+      <a class="btn rv" style="--i:1" href="mailto:emmanuel.maclaren.yansouni@gmail.com?subject=Free%20preview&body=My%20business%3A%20"><span lang="en">Get my free preview</span><span lang="fr">Obtenir mon aperçu gratuit</span> <span class="arr">→</span></a>
+      <p class="alt rv" style="--i:2"><span lang="en">Free preview within a week. No obligation.</span><span lang="fr">Aperçu gratuit en moins d'une semaine. Sans engagement.</span></p>
+      <p class="alt rv" style="--i:2"><a href="mailto:emmanuel.maclaren.yansouni@gmail.com">emmanuel.maclaren.yansouni@gmail.com</a><br><span lang="en">or text </span><span lang="fr">ou par texto au </span><a href="sms:+14387221921">438 722-1921</a></p>
+    </div>
   </div>
 </section>
 
@@ -432,238 +326,313 @@
 (function () {
   var root = document.documentElement;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  /* Language: English by default, French on request */
+  /* Language toggle */
   var btn = document.getElementById('lang');
   function setLang(l) {
     root.lang = l === 'fr' ? 'fr-CA' : 'en';
     btn.textContent = l === 'fr' ? 'EN' : 'FR';
     btn.setAttribute('aria-label', l === 'fr' ? 'Switch to English' : 'Passer en français');
     try { localStorage.setItem('lang', l); } catch (e) {}
-    lightWords();
   }
   btn.addEventListener('click', function () { setLang(root.lang === 'en' ? 'fr' : 'en'); });
+  var saved = null; try { saved = localStorage.getItem('lang'); } catch (e) {}
+  if (saved === 'fr') setLang('fr');
 
-  /* Split statement into words */
+  /* Statement: words light up as they cross the middle of the screen */
+  var words = [];
   document.querySelectorAll('.split').forEach(function (p) {
     p.innerHTML = p.textContent.trim().split(/\s+/).map(function (w) { return '<span class="w">' + w + '</span>'; }).join(' ');
+    words.push([p, p.querySelectorAll('.w')]);
   });
-  var stmt = document.getElementById('statement');
-  function lightWords() {
-    var ws = [].slice.call(stmt.querySelectorAll('.split')).filter(function (e) { return e.offsetParent; })[0];
-    if (!ws) return;
-    var words = ws.querySelectorAll('.w');
-    if (reduce) { words.forEach(function (w) { w.classList.add('lit'); }); return; }
-    var r = ws.getBoundingClientRect(), vh = innerHeight;
-    var prog = (vh * .85 - r.top) / (r.height + vh * .35);
-    var n = Math.round(Math.max(0, Math.min(1, prog)) * words.length);
-    words.forEach(function (w, i) { w.classList.toggle('lit', i < n); });
-  }
-
-  var saved = null; try { saved = localStorage.getItem('lang'); } catch (e) {}
-  if (saved === 'fr' || location.hash === '#fr') setLang('fr');
-
-  /* Split headings into masked words */
-  function splitWords(el) {
-    var i = 0;
-    (function walk(node) {
-      [].slice.call(node.childNodes).forEach(function (n) {
-        if (n.nodeType === 3) {
-          var frag = document.createDocumentFragment();
-          n.textContent.split(/(\s+)/).forEach(function (pt) {
-            if (!pt) return;
-            if (/^\s+$/.test(pt)) { frag.appendChild(document.createTextNode(' ')); return; }
-            var m = document.createElement('span'); m.className = 'wm';
-            var w = document.createElement('span'); w.className = 'wi'; w.style.setProperty('--i', i++);
-            w.textContent = pt; m.appendChild(w); frag.appendChild(m);
-          });
-          n.parentNode.replaceChild(frag, n);
-        } else if (n.nodeType === 1) walk(n);
-      });
-    })(el);
-    el.classList.remove('rv'); el.classList.add('ws');
-  }
-  /* Hero headline: same masks, but one span per letter */
-  function splitChars(el) {
-    splitWords(el); el.classList.remove('ws'); el.classList.add('hc');
-    var c = 0;
-    el.querySelectorAll('.wi').forEach(function (w) {
-      var t = w.textContent; w.textContent = '';
-      for (var j = 0; j < t.length; j++) {
-        var ch = document.createElement('span'); ch.className = 'ch'; ch.style.setProperty('--c', c++);
-        ch.textContent = t[j]; w.appendChild(ch);
-      }
+  var bar = document.getElementById('progress'), links = [];
+  document.querySelectorAll('.nav-r a:not(.solid)').forEach(function (a) { var t = document.querySelector(a.getAttribute('href')); if (t) links.push([a, t]); });
+  function onScroll() {
+    var max = root.scrollHeight - innerHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? scrollY / max : 0) + ')';
+    var mid = innerHeight * .5;
+    links.forEach(function (l) { var r = l[1].getBoundingClientRect(); l[0].classList.toggle('on', r.top <= mid && r.bottom > mid); });
+    if (reduce) return;
+    words.forEach(function (pw) {
+      var r = pw[0].getBoundingClientRect(); if (!r.height) return;
+      var k = (innerHeight * .82 - r.top) / (r.height + innerHeight * .35);
+      var n = Math.round(Math.min(1, Math.max(0, k)) * pw[1].length);
+      pw[1].forEach(function (w, i) { w.classList.toggle('lit', i < n); });
     });
   }
-  document.querySelectorAll('.hero h1').forEach(splitChars);
-  document.querySelectorAll('.steps h3, .tilt h3').forEach(splitWords);
-  document.querySelectorAll('.deal h2, .contact h2').forEach(function (el) { el.classList.remove('rv'); el.classList.add('wipe'); el.parentElement.classList.add('wipe-host'); });
-  document.querySelectorAll('.cards .tilt, .prices .tilt').forEach(function (el, i) { el.classList.remove('rv'); el.classList.add('flip'); el.style.setProperty('--k', i % 3); });
-  document.querySelectorAll('.steps li').forEach(function (el) { el.classList.remove('rv'); el.classList.add('draw'); });
-  var terms = document.querySelector('.terms');
-  terms.classList.remove('rv'); terms.classList.add('pop');
-  ['en', 'fr'].forEach(function (l) { terms.querySelectorAll('[lang="' + l + '"]').forEach(function (x, i) { x.style.setProperty('--k', i); }); });
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
 
-  /* Prices count up when they appear */
-  function countUp(box) {
-    box.querySelectorAll('b > span').forEach(function (sp) {
-      var node = sp.firstChild; if (!node || node.nodeType !== 3) return;
-      var m = node.textContent.match(/\d+/); if (!m) return;
-      var target = +m[0], before = node.textContent.slice(0, m.index), after = node.textContent.slice(m.index + m[0].length), t0 = null;
-      (function step(now) {
-        if (t0 === null) t0 = now;
-        var k = Math.min(1, (now - t0) / 1400), e = 1 - Math.pow(1 - k, 4);
-        node.textContent = before + Math.round(target * e) + after;
-        if (k < 1) requestAnimationFrame(step);
-      })(performance.now());
-    });
-  }
-
-  /* clipped headlines have no visible area, so their container triggers them */
-  var watch = document.querySelectorAll('.ws, .hc, .wipe-host, .flip, .draw, .pop, .eyebrow, .prices');
-  if ('IntersectionObserver' in window && !reduce) {
-    var hio = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target; el.classList.add('in'); hio.unobserve(el);
-        if (el.classList.contains('wipe-host')) el.querySelectorAll('.wipe').forEach(function (w) { w.classList.add('in'); });
-        if (el.classList.contains('prices')) setTimeout(function () { countUp(el); }, 250);
-        if (el.classList.contains('flip')) setTimeout(function () { el.classList.remove('flip', 'in'); }, 2200);
-      });
-    }, { threshold: .2, rootMargin: '0px 0px -8% 0px' });
-    watch.forEach(function (h) { hio.observe(h); });
-  } else { watch.forEach(function (h) { h.classList.add('in'); }); document.querySelectorAll('.wipe').forEach(function (w) { w.classList.add('in'); }); }
-  requestAnimationFrame(function () { document.querySelector('.hero').classList.add('ready'); });
-
-  /* Reveal */
-  var rvs = document.querySelectorAll('.rv');
+  /* Reveal on scroll */
+  var rv = document.querySelectorAll('.rv');
   if ('IntersectionObserver' in window && !reduce) {
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target; el.classList.add('on'); io.unobserve(el);
-        /* hand the element back to its own hover transitions once the entrance is done */
-        setTimeout(function () { el.classList.remove('rv', 'on'); }, 2400);
-      });
-    }, { threshold: .12 });
-    rvs.forEach(function (e) { io.observe(e); });
-  } else { rvs.forEach(function (e) { e.classList.add('on'); }); }
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    rv.forEach(function (el) { io.observe(el); });
+  } else rv.forEach(function (el) { el.classList.add('in'); });
 
-  /* Scroll: progress bar, word lighting, shader */
-  var bar = document.getElementById('progress'), scrollP = 0;
-  function onScroll() {
-    var max = document.documentElement.scrollHeight - innerHeight;
-    scrollP = max > 0 ? scrollY / max : 0;
-    bar.style.transform = 'scaleX(' + scrollP + ')';
-    lightWords();
-  }
-  addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', onScroll);
-  onScroll();
+  /* The deal panel: two hands about to touch, seen through fluted glass. Drawn entirely in a shader. */
+  (function () {
+    var box = document.getElementById('flute'); if (!box) return;
+    var c = document.createElement('canvas'); c.setAttribute('aria-hidden', 'true');
+    var g = c.getContext('webgl', { antialias: false }); if (!g) return;
+    var F = [
+      'precision highp float;uniform vec2 r,cen,m,cp;uniform float t,N,sc,wd,mh,ck,nr;',
+      'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+      'float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}',
+      'float fbm(vec2 p){return n(p)*.5+n(p*2.03+7.)*.3+n(p*4.1+3.)*.2;}',
+      'float sg(vec2 p,vec2 a,vec2 b,float w){vec2 pa=p-a,ba=b-a;return length(pa-ba*clamp(dot(pa,ba)/dot(ba,ba),0.,1.))-w;}',
+      'float sm(float a,float b){float q=clamp(.5+.5*(b-a)/.07,0.,1.);return mix(b,a,q)-.07*q*(1.-q);}',
+      'float fg(vec2 p,vec2 a,vec2 b,vec2 c,float w){return sm(sg(p,a,b,w),sg(p,b,c,w*.88));}',
+      'mat2 rt(float x){float c=cos(x),s=sin(x);return mat2(c,-s,s,c);}',
+      /* left: the limp, waiting hand */
+      'float hl(vec2 p,float e){float d=sg(p,vec2(-2.6,-.34),vec2(-1.02,-.06),.2);',
+      ' d=sm(d,sg(p,vec2(-1.02,-.06),vec2(-.66,.0),.2));',
+      ' d=sm(d,fg(p,vec2(-.62,.09),vec2(-.37,.08),vec2(-.16,-.01+e),.056));',
+      ' d=sm(d,fg(p,vec2(-.6,.0),vec2(-.37,-.07),vec2(-.25,-.2-e),.056));',
+      ' d=sm(d,fg(p,vec2(-.63,-.08),vec2(-.44,-.17),vec2(-.35,-.31-e),.05));',
+      ' d=sm(d,fg(p,vec2(-.68,-.14),vec2(-.53,-.25),vec2(-.48,-.36-e),.044));',
+      ' return sm(d,fg(p,vec2(-.9,.1),vec2(-.7,.24),vec2(-.56,.22),.062));}',
+      /* right: the reaching hand, index out */
+      'float hr(vec2 p,float e){float d=sg(p,vec2(2.6,.44),vec2(1.02,.14),.2);',
+      ' d=sm(d,sg(p,vec2(1.02,.14),vec2(.66,.08),.19));',
+      ' d=sm(d,fg(p,vec2(.62,.13),vec2(.33,.07),vec2(.1,.02+e),.056));',
+      ' d=sm(d,fg(p,vec2(.6,.03),vec2(.41,-.07),vec2(.34,-.19-e),.056));',
+      ' d=sm(d,fg(p,vec2(.63,-.04),vec2(.48,-.15),vec2(.43,-.26-e),.05));',
+      ' d=sm(d,fg(p,vec2(.68,-.09),vec2(.57,-.2),vec2(.54,-.3-e),.044));',
+      ' return sm(d,fg(p,vec2(.88,.25),vec2(.68,.33),vec2(.53,.26),.062));}',
+      'vec3 pal(float x){x=clamp(x,0.,1.);vec3 c=mix(vec3(.05,.012,.012),vec3(.36,.03,.03),smoothstep(0.,.3,x));',
+      ' c=mix(c,vec3(.8,.13,.05),smoothstep(.26,.56,x));c=mix(c,vec3(1.,.5,.12),smoothstep(.54,.8,x));',
+      ' return mix(c,vec3(1.,.92,.7),smoothstep(.82,1.,x));}',
+      'void main(){vec2 uv=gl_FragCoord.xy/r;float as=r.x/r.y;float fx=fract(uv.x*N);',
+      ' vec2 k=vec2(as,1.)/sc;vec2 p0=(uv-cen)*k,mp=(m-cen)*k,cq=(cp-cen)*k;',
+      /* the glass bends harder under the pointer, and a click sends a ring through it */
+      ' float md=dot(p0-mp,p0-mp);float lens=1.+1.1*mh*exp(-md*3.);',
+      ' vec2 p=p0;p.x+=(fx-.5)*.085*lens;p.y+=(fx-.5)*.02*lens;',
+      ' vec2 cd=p0-cq;float ring=length(cd)-ck*1.5;float rp=exp(-ring*ring*26.)*exp(-ck*1.5);p+=normalize(cd+1e-4)*rp*.06;',
+      /* how close the fingers get: a little from scrolling the panel into view, the rest from the pointer */
+      ' vec2 g0=mp-vec2(-.03,0.);float cl=clamp(max(nr*.5,mh*exp(-dot(g0,g0)*.45)),0.,1.);',
+      ' float a=sin(t*.42)*(1.-.6*cl),b=sin(t*.29+1.3);float ly=mh*clamp(mp.y,-.6,.6)*.06;',
+      ' vec2 pl=rt(b*.025)*(p-vec2(a*.04-.03+cl*.055,b*.03+ly)+vec2(1.,0.))-vec2(1.,0.);',
+      ' vec2 pq=rt(-a*.02)*(p-vec2(.03-a*.04-cl*.055,sin(t*.24)*.03+ly)-vec2(1.,0.))+vec2(1.,0.);',
+      ' float d=min(hl(pl,sin(t*.6)*.012),hr(pq,sin(t*.5+2.)*.01));',
+      ' vec2 gp=p-vec2(-.03,ly);float gl2=dot(gp,gp);float glow=exp(-gl2*1.6)*(1.+.22*cl);float pulse=.72+.28*sin(t*1.1);',
+      ' float lite=mh*exp(-md*3.)*.15+rp*.26;',
+      ' float bg=.15+.2*glow+(fbm(p*1.1+vec2(t*.05,-t*.035))-.5)*.26+lite;',
+      ' float ins=smoothstep(.045,-.045,d);',
+      ' float hand=.4+.42*glow*pulse-smoothstep(.0,-.14,d)*.13+(fbm(p*3.+t*.05)-.5)*.14+lite*.8;',
+      ' float v=mix(bg,hand,ins)+exp(-gl2*34.)*.6*pulse*(1.+1.1*cl);',
+      ' vec3 c=pal(v);',
+      ' c*=.72+.36*sin(fx*3.14159);c+=smoothstep(.95,1.,fx)*.045;c*=1.-smoothstep(.035,0.,fx)*.4;',
+      ' c*=mix(.42+.58*smoothstep(.8,.42,uv.y),.34+.66*smoothstep(.08,.6,uv.x),wd);',
+      ' c+=(h(gl_FragCoord.xy+fract(t)*71.)-.5)*.045;',
+      ' gl_FragColor=vec4(c,1.);}'
+    ].join('\n');
+    function sh(type, src) { var x = g.createShader(type); g.shaderSource(x, src); g.compileShader(x); return x; }
+    var P = g.createProgram();
+    g.attachShader(P, sh(g.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}')); g.attachShader(P, sh(g.FRAGMENT_SHADER, F));
+    g.linkProgram(P);
+    if (!g.getProgramParameter(P, g.LINK_STATUS)) { console.warn(g.getProgramInfoLog(P)); return; }
+    g.useProgram(P);
+    g.bindBuffer(g.ARRAY_BUFFER, g.createBuffer());
+    g.bufferData(g.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), g.STATIC_DRAW);
+    var al = g.getAttribLocation(P, 'a'); g.enableVertexAttribArray(al); g.vertexAttribPointer(al, 2, g.FLOAT, false, 0, 0);
+    var u = {}; ['r','cen','t','N','sc','wd','m','cp','mh','ck','nr'].forEach(function (n) { u[n] = g.getUniformLocation(P, n); });
+    box.insertBefore(c, box.firstChild); box.classList.add('gl');
+    var seen = false, t0 = performance.now(), last = t0;
+    var tx = .5, ty = .5, px = .5, py = .5, mt = 0, mh = 0, kx = .5, ky = .5, kt = -1e5, nr = 0;
+    function at(e) { var b = box.getBoundingClientRect(); tx = (e.clientX - b.left) / b.width; ty = 1 - (e.clientY - b.top) / b.height; mt = 1; }
+    box.addEventListener('pointermove', at, { passive: true });
+    box.addEventListener('pointerdown', function (e) { at(e); if (mh < .2) { px = tx; py = ty; } kx = tx; ky = ty; kt = performance.now(); }, { passive: true });
+    ['pointerleave', 'pointercancel'].forEach(function (n) { box.addEventListener(n, function () { mt = 0; }); });
+    box.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') mt = 0; });
+    function draw(now) {
+      var dt = Math.min(.25, Math.max(0, (now - last) / 1000)); last = now;
+      var q = 1 - Math.exp(-dt * 7); px += (tx - px) * q; py += (ty - py) * q; mh += (mt - mh) * (1 - Math.exp(-dt * 4));
+      var b = box.getBoundingClientRect(), off = Math.abs(b.top + b.height / 2 - innerHeight / 2) / (innerHeight * .6);
+      var nt = Math.max(0, 1 - off); nt = nt * nt * (3 - 2 * nt); nr += (nt - nr) * (1 - Math.exp(-dt * 3));
+      g.uniform2f(u.m, px, py); g.uniform2f(u.cp, kx, ky); g.uniform1f(u.mh, mh); g.uniform1f(u.nr, nr);
+      g.uniform1f(u.ck, Math.min(20, (now - kt) / 1000));
+      var dpr = Math.min(devicePixelRatio || 1, 1.5), w = Math.round(box.clientWidth * dpr), hh = Math.round(box.clientHeight * dpr);
+      if (c.width !== w || c.height !== hh) { c.width = w; c.height = hh; g.viewport(0, 0, w, hh); }
+      var wide = box.clientWidth >= 760;
+      g.uniform2f(u.r, w, hh); g.uniform1f(u.t, reduce ? 4 : (now - t0) / 1000);
+      g.uniform1f(u.N, Math.max(8, Math.round(box.clientWidth / 46)));
+      g.uniform2f(u.cen, wide ? .7 : .5, wide ? .5 : .23); g.uniform1f(u.sc, wide ? .66 : .24); g.uniform1f(u.wd, wide ? 1 : 0);
+      g.drawArrays(g.TRIANGLES, 0, 3);
+    }
+    function loop(now) { draw(now); if (seen && !document.hidden && !reduce) requestAnimationFrame(loop); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+      var was = seen; seen = es[0].isIntersecting; if (seen && !was) requestAnimationFrame(loop);
+    }, { rootMargin: '200px' }).observe(box);
+    else { seen = true; requestAnimationFrame(loop); }
+    document.addEventListener('visibilitychange', function () { if (seen && !document.hidden) requestAnimationFrame(loop); });
+    addEventListener('resize', function () { requestAnimationFrame(draw); });
+  })();
 
-  /* 3D tilt with glare */
-  if (fine && !reduce) {
-    document.querySelectorAll('.tilt').forEach(function (el) {
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-        el.classList.add('live');
-        el.style.setProperty('--ry', ((x - .5) * 12).toFixed(2) + 'deg');
-        el.style.setProperty('--rx', ((.5 - y) * 10).toFixed(2) + 'deg');
-        el.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
-        el.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
-        el.style.setProperty('--ga', '1');
-      });
-      el.addEventListener('pointerleave', function () {
-        el.classList.remove('live');
-        el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); el.style.setProperty('--ga', '0');
-      });
-    });
-
-    /* Magnetic buttons */
-    document.querySelectorAll('.mag').forEach(function (el) {
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-        el.style.transform = 'translate(' + (dx * .18).toFixed(1) + 'px,' + (dy * .28).toFixed(1) + 'px)';
-      });
-      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
-    });
-  }
-
-  /* Background shader: one scene that changes as you scroll.
-     Top: thermal gradient behind fluted glass. Middle: it cools to embers and contour lines appear.
-     Bottom: the heat comes back around the contact section. */
-  var cv = document.getElementById('bg');
-  var gl = cv.getContext('webgl', { antialias: false }) || cv.getContext('experimental-webgl');
+  /* Graphite sculpture: one cloud of particles that swirls into a different object for each part
+     of the page (book, phone, map pin, paper plane) and scatters to dust in between. */
+  var cv = document.getElementById('stage');
+  var gl = cv.getContext('webgl', { antialias: false, premultipliedAlpha: true });
   if (!gl) return;
-  var vs = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-  var fs = [
-    'precision highp float;uniform vec2 r;uniform float t;uniform vec2 m;uniform float s;',
-    'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
-    'float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);',
-    'return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}',
-    'float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}',
-    'vec3 pal(float x){x=clamp(x,0.,1.);',
-    'vec3 c=mix(vec3(.03,.01,.03),vec3(.32,.02,.07),smoothstep(.0,.32,x));',
-    'c=mix(c,vec3(.86,.14,.04),smoothstep(.28,.56,x));',
-    'c=mix(c,vec3(1.,.48,.1),smoothstep(.52,.78,x));',
-    'c=mix(c,vec3(1.,.9,.66),smoothstep(.8,1.,x));return c;}',
+  var VS = [
+    'attribute vec4 a;attribute vec3 r,p1,p2,p3;',
+    'uniform float f,o,k,k0,mx,T,as,cx,cy,sc,dp,al,yw,tl,lp,rho,sy,ht;varying float va,ve;',
+    'mat2 rot(float x){float c=cos(x),s=sin(x);return mat2(c,-s,s,c);}',
+    'vec4 shp(float kk){float t=a.x,u=a.y;',
+    ' if(kk<.5){float thC=.04+(1.-t)*.2;',
+    '  float thO=t<.5?3.1016-t*.5:(t>.62?.04+(1.-t)*.5:mix(2.5,.65,(t-.5)/.12)+sin(T*.7+t*40.)*.05);',
+    '  float th=mix(thC,thO,o);th+=(1.5708-th)*.4*(1.-u)*(1.-u)*o;',
+    '  return vec4(cos(th)*u-.5*(1.-o),sin(th)*u-.15,a.z*1.35,.5+.5*u);}',
+    ' vec3 s=kk<1.5?p1:(kk<2.5?p2:p3);',
+    ' if(kk>2.5){s.xy=rot(-lp)*s.xy+rho*vec2(sin(lp),1.-cos(lp)-.7*smoothstep(0.,1.,sin(lp*.5)));}',
+    ' return vec4(s,1.);}',
     'void main(){',
-    ' vec2 uv=gl_FragCoord.xy/r;float as=r.x/r.y;',
-    ' float heat=1.-smoothstep(.04,.32,s)*.88+smoothstep(.78,1.,s)*.62;',
-    ' float flute=1.-smoothstep(.06,.4,s);',
-    ' float lines=smoothstep(.12,.4,s)*(1.-smoothstep(.85,1.,s)*.5);',
-    ' float N=floor(clamp(r.x/110.,7.,18.));float fx=fract(uv.x*N);',
-    ' vec2 q=vec2(uv.x*as,uv.y);q.x+=(fx-.5)*.16*flute;q.y+=(fx-.5)*.04*flute+s*1.8;',
-    ' float tt=t*.05;',
-    ' vec2 w=vec2(fbm(q*1.5+vec2(tt,0.)),fbm(q*1.5+vec2(4.,-tt)));',
-    ' float v=fbm(q*1.1+w*1.9+vec2(0.,-tt*1.5));',
-    ' vec2 mm=vec2(m.x*as,m.y+s*1.8);float d=length(q-mm);',
-    ' float glow=exp(-d*d*5.);',
-    ' float vh=v*1.35-.28-uv.y*.12-(1.-heat)*.55+glow*.42*(.45+.55*heat);',
-    ' vec3 c=pal(vh);',
-    ' c*=mix(1.,.74+.34*sin(fx*3.14159),flute);',
-    ' c+=smoothstep(.94,1.,fx)*.05*flute;',
-    ' float k=fract((v+glow*.12)*15.);float l=smoothstep(.045,.0,min(k,1.-k));',
-    ' vec3 lc=mix(vec3(.34,.32,.3),vec3(1.,.36,.12),smoothstep(.5,.75,v+glow*.3));',
-    ' c+=lc*l*lines*.42;',
-    ' c+=(h(gl_FragCoord.xy+fract(t*.7)*91.)-.5)*.09;',
-    ' gl_FragColor=vec4(c,1.);}'
+    /* one object can turn straight into the next: each grain crosses over on its own beat, with a twist */
+    ' float m=smoothstep(a.w*.4,a.w*.4+.6,mx);vec4 A=shp(k0),B=shp(k);',
+    ' vec3 s=mix(A.xyz,B.xyz,m);float sh=mix(A.w,B.w,m);float mm=m*(1.-m);',
+    ' s.xz=rot(mm*(3.+r.y*4.))*s.xz;s+=(r-.5)*mm*1.5;',
+    ' s.xz=rot(yw)*s.xz;s.yz=rot(tl)*s.yz;',
+    ' float fi=smoothstep(a.w*.5,a.w*.5+.5,f);',
+    /* loose dust drifts past as the page scrolls, nearer grains faster, so the page reads as one space */
+    ' float dy=mod((r.y-.5)*6.5+sy*(.35+r.z*.7)+3.25,6.5)-3.25;',
+    ' vec3 d=vec3((r.x-.5)*11.,dy,(r.z-.5)*5.)+vec3(sin(T*.11+r.y*30.),cos(T*.13+r.x*30.),0.)*.3;',
+    ' vec3 p=mix(d,s,fi);p.xz=rot((1.-fi)*fi*(5.+r.y*5.))*p.xz;p.y+=(1.-fi)*fi*(r.z-.5)*2.;',
+    ' float z=4.+p.z;vec2 q=p.xy/z*sc;',
+    ' gl_Position=vec4(q.x/as+cx*fi,q.y+cy*fi,0.,1.);',
+    ' gl_PointSize=dp*(.8+r.y*1.4)*4./z;',
+    ' float fog=clamp(1.3-(z-3.3)*.5,.22,1.);',
+    ' ve=smoothstep(.93,.96,fract(r.x*37.+r.y*11.)+ht*.3);',
+    ' va=mix(.2,al*fog*sh,fi)*(.3+.7*r.z)*(1.+ve*ht*.6);}'
   ].join('\n');
+  var FS = 'precision mediump float;varying float va,ve;void main(){float d=length(gl_PointCoord-.5);float q=va*smoothstep(.5,.18,d);gl_FragColor=vec4(mix(vec3(.84,.85,.89),vec3(1.,.42,.12),ve)*q,q);}';
   function sh(type, src) { var x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); return x; }
   var pr = gl.createProgram();
-  gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs));
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS));
   gl.linkProgram(pr);
   if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { console.warn(gl.getProgramInfoLog(pr)); return; }
   gl.useProgram(pr);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
-  var a = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
-  var uR = gl.getUniformLocation(pr, 'r'), uT = gl.getUniformLocation(pr, 't'), uM = gl.getUniformLocation(pr, 'm'), uS = gl.getUniformLocation(pr, 's');
-  var mx = .68, my = .42, tx = mx, ty = my, sp = 0, t0 = performance.now();
-  addEventListener('pointermove', function (e) { tx = e.clientX / innerWidth; ty = 1 - e.clientY / innerHeight; }, { passive: true });
-  function size() {
-    var dpr = Math.min(devicePixelRatio || 1, 1.25);
-    var w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
-    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; gl.viewport(0, 0, w, h); }
+
+  var R = Math.random, N = innerWidth < 900 ? 34000 : 64000, L = 22;
+  var A = new Float32Array(N * 4), RR = new Float32Array(N * 3), P1 = new Float32Array(N * 3), P2 = new Float32Array(N * 3), P3 = new Float32Array(N * 3);
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function rrect(hw, hh, rad) { /* point on a rounded-rectangle outline */
+    var per = R() * (hw + hh) * 4, x, y;
+    if (per < hw * 2) { x = per - hw; y = hh; } else if (per < hw * 4) { x = per - hw * 3; y = -hh; }
+    else if (per < hw * 4 + hh * 2) { x = hw; y = per - hw * 4 - hh; } else { x = -hw; y = per - hw * 4 - hh * 3; }
+    var dx = Math.max(Math.abs(x) - (hw - rad), 0), dy = Math.max(Math.abs(y) - (hh - rad), 0);
+    if (dx > 0 && dy > 0) { var l = Math.hypot(dx, dy); x = Math.sign(x) * (hw - rad + dx / l * rad); y = Math.sign(y) * (hh - rad + dy / l * rad); }
+    return [x, y];
   }
-  function draw(now) {
-    size();
-    mx += (tx - mx) * .05; my += (ty - my) * .05; sp += (scrollP - sp) * .08;
-    gl.uniform2f(uR, cv.width, cv.height);
-    gl.uniform1f(uT, reduce ? 12 : (now - t0) / 1000 + 12);
-    gl.uniform2f(uM, mx, my);
-    gl.uniform1f(uS, sp);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  function phone() {
+    var e = R(), q, zf = -.06;
+    if (e < .26) { q = rrect(.52, 1.02, .13); return [q[0], q[1], R() < .5 ? -.06 : .06]; }
+    if (e < .36) { q = rrect(.52, 1.02, .13); return [q[0], q[1], lerp(-.06, .06, R())]; }
+    if (e < .44) return [lerp(-.4, .4, R()), lerp(.76, .86, R()), zf];
+    if (e < .62) { if (R() < .35) { q = rrect(.4, .25, .03); return [q[0], q[1] + .43, zf]; } return [lerp(-.4, .4, R()), lerp(.18, .68, R()), zf]; }
+    if (e < .78) { var li = Math.floor(R() * 4); return [lerp(-.4, [.36, .22, .3, .05][li], R()), .06 - li * .1, zf]; }
+    if (e < .86) return [lerp(-.4, -.04, R()), lerp(-.5, -.39, R()), zf];
+    q = rrect(.185, .14, .03); return [q[0] + (R() < .5 ? -.215 : .215), q[1] - .74, zf];
   }
-  function loop(now) { draw(now); if (!document.hidden) requestAnimationFrame(loop); }
+  function pin() {
+    var e = R(), an = R() * 6.2832, t, rad;
+    if (e < .66) { t = Math.acos(1 - 2 * R()) * .9 + .3; if (t > 3.1416) t = 3.1416 * R();
+      rad = .78 * Math.sin(t) * Math.pow(Math.sin(t / 2), 1.5); return [Math.cos(an) * rad, -Math.cos(t) * .95 + .12, Math.sin(an) * rad]; }
+    if (e < .8) { var ph = Math.acos(1 - 2 * R()); return [Math.cos(an) * Math.sin(ph) * .2, Math.cos(ph) * .2 + .55, Math.sin(an) * Math.sin(ph) * .2]; }
+    rad = e < .88 ? .42 : (e < .95 ? .78 : 1.12); return [Math.cos(an) * rad, -.86, Math.sin(an) * rad];
+  }
+  var PV = { n: [1.25, .12, 0], l: [-.95, .3, .88], r: [-.95, .3, -.88], cl: [-.95, .22, .1], cr: [-.95, .22, -.1], k: [-.85, -.34, 0] };
+  var TR = [[PV.n, PV.l, PV.cl], [PV.n, PV.r, PV.cr], [PV.n, PV.cl, PV.k], [PV.n, PV.cr, PV.k]];
+  function plane() {
+    var e = R(), tr = TR[Math.floor(R() * 4)], out;
+    if (e < .1) { var s = R(), xx = -1.1 - s * 1.5; if (Math.floor(s * 14) % 2) s += .035; return [xx, -.05 - Math.sin(s * 3.6) * .32, Math.sin(s * 5.) * .35]; }
+    if (e < .55) { var i = Math.floor(R() * 3), p = tr[i], q = tr[(i + 1) % 3], t = R(); out = [lerp(p[0], q[0], t), lerp(p[1], q[1], t), lerp(p[2], q[2], t)]; }
+    else { var u = R(), v = R(); if (u + v > 1) { u = 1 - u; v = 1 - v; } var w = 1 - u - v;
+      out = [tr[0][0] * u + tr[1][0] * v + tr[2][0] * w, tr[0][1] * u + tr[1][1] * v + tr[2][1] * w, tr[0][2] * u + tr[1][2] * v + tr[2][2] * w]; }
+    return out;
+  }
+  for (var i = 0; i < N; i++) {
+    var r0 = R(), t, u = R(), v = R() - .5, e = R();
+    if (r0 < .2) t = r0 < .1 ? 0 : 1;
+    else { t = (1 + Math.floor(R() * L)) / (L + 1); if (e > .55) { v = Math.round(v * 16) / 16 * .82; u = .1 + u * .8; } }
+    if (e < .12) u = 1; else if (e < .22) v = R() < .5 ? -.5 : .5; else if (e < .27) u = 0;
+    A[i*4] = t; A[i*4+1] = u; A[i*4+2] = v; A[i*4+3] = R();
+    RR[i*3] = R(); RR[i*3+1] = R(); RR[i*3+2] = R();
+    var a1 = phone(), a2 = pin(), a3 = plane();
+    for (var j = 0; j < 3; j++) { P1[i*3+j] = a1[j]; P2[i*3+j] = a2[j]; P3[i*3+j] = a3[j]; }
+  }
+  function attr(name, data, n) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    var l = gl.getAttribLocation(pr, name); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, n, gl.FLOAT, false, 0, 0);
+  }
+  attr('a', A, 4); attr('r', RR, 3); attr('p1', P1, 3); attr('p2', P2, 3); attr('p3', P3, 3);
+  var U = {}; ['f','o','k','k0','mx','T','as','cx','cy','sc','dp','al','yw','tl','lp','rho','sy','ht'].forEach(function (n) { U[n] = gl.getUniformLocation(pr, n); });
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.clearColor(0, 0, 0, 0);
+
+  /* Which object belongs to which part of the page. Sections not listed are dust.
+     Sections that touch (join) hand their object straight to the next one instead of dissolving. */
+  var scenes = [
+    { el: document.getElementById('top'), k: 0, first: true },
+    { el: document.getElementById('services'), k: 1, joinNext: true },
+    { el: document.getElementById('how'), k: 2, joinPrev: true },
+    { el: document.getElementById('contact'), k: 3, last: true }
+  ];
+  var deal = document.getElementById('flute');
+  var TILT = [.72, .1, .2, .32], SCALE = [1, .92, .9, .8];
+  var cur = 0, prev = 0, mx = 1, ff = 0, yaw = 0, tyaw = 0, ht = 0, fly = -1, t0 = performance.now(), last = t0;
+  addEventListener('pointermove', function (e) { tyaw = (e.clientX / innerWidth - .5) * .6; }, { passive: true });
+  function ss(a, b, x) { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); }
+  function mixv(a, b, t) { return a + (b - a) * t; }
+  function yawOf(k, T) { return k === 0 ? .55 + Math.sin(T * .25) * .12 : k === 1 ? -.35 + Math.sin(T * .45) * .4 : k === 2 ? T * .4 : .5 + Math.sin(T * .4) * .35; }
+  function frame(now) {
+    var dpr = Math.min(devicePixelRatio || 1, 1.75);
+    var W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; gl.viewport(0, 0, W, H); }
+    var T = reduce ? 9 : (now - t0) / 1000, c = innerHeight * .5, want = -1, tf = 0, wide = innerWidth >= 900, as = W / H;
+    var dt = Math.min(.25, Math.max(0, (now - last) / 1000)); last = now;
+    for (var i = 0; i < scenes.length; i++) {
+      var sn = scenes[i], rc = sn.el.getBoundingClientRect();
+      var top = sn.first ? -1e6 : rc.top - (sn.last ? innerHeight * .38 : 0), bot = sn.last ? 1e6 : rc.bottom;
+      if (c >= top && c < bot) {
+        if (!wide && !sn.first && !sn.last) break; /* phones: no object behind the text, only dust */
+        var edge = Math.min(innerHeight * .3, rc.height * .35) * (sn.last ? .5 : 1);
+        want = sn.k; tf = ss(0, edge, Math.min(sn.joinPrev ? 1e6 : c - top, sn.joinNext ? 1e6 : bot - c)); break;
+      }
+    }
+    if (want >= 0 && want !== cur) {
+      if (ff < .03) { cur = prev = want; mx = 1; }
+      else if (!reduce && ff > .5 && mx >= 1 && Math.abs(want - cur) === 1 && Math.min(want, cur) === 1) { prev = cur; cur = want; mx = 0; }
+      else tf = 0;
+    }
+    mx = Math.min(1, mx + dt / 1.5);
+    if (cur === 0) tf = Math.min(tf, ss(.3, 2.4, T));
+    ff = reduce ? tf : ff + (tf - ff) * (1 - Math.exp(-dt * 3.4)); yaw += (tyaw - yaw) * (1 - Math.exp(-dt * 2.5));
+    /* the deal panel warms the dust around it */
+    var dr = deal.getBoundingClientRect(), hn = Math.max(0, 1 - Math.abs(dr.top + dr.height / 2 - c) / (innerHeight * .9));
+    ht += (hn * hn * (3 - 2 * hn) - ht) * (1 - Math.exp(-dt * 2.5));
+    /* paper plane: one loop each time it assembles, then it cruises */
+    if (cur === 3 && ff > .55) { if (fly < 0) fly = T; } else if (cur !== 3 || ff < .1) fly = -1;
+    var e = ss(0, 1, mx);
+    function cyOf(k) { return wide ? (k === 0 ? -.04 : k === 3 ? Math.sin(T * .8) * .02 : 0) : (k === 0 ? -.58 : k === 3 ? .46 + Math.sin(T * .8) * .012 : 0); }
+    function scOf(k) { return (wide ? Math.min(2.3, as * 1.45) : Math.min(1.7, as * 3.3) * (k === 0 ? .8 : 1)) * SCALE[k]; }
+    gl.uniform1f(U.f, ff); gl.uniform1f(U.o, ss(1.8, 4, T)); gl.uniform1f(U.k, cur); gl.uniform1f(U.k0, prev); gl.uniform1f(U.mx, mx);
+    gl.uniform1f(U.T, T); gl.uniform1f(U.as, as);
+    gl.uniform1f(U.cx, wide ? .5 : 0);
+    gl.uniform1f(U.cy, mixv(cyOf(prev), cyOf(cur), e));
+    gl.uniform1f(U.sc, mixv(scOf(prev), scOf(cur), e));
+    gl.uniform1f(U.dp, dpr * 1.15);
+    gl.uniform1f(U.al, 1);
+    gl.uniform1f(U.lp, reduce || fly < 0 ? 0 : 6.2832 * ss(.5, 3.4, T - fly)); gl.uniform1f(U.rho, wide ? .5 : .26);
+    gl.uniform1f(U.yw, mixv(yawOf(prev, T), yawOf(cur, T), e) + yaw); gl.uniform1f(U.tl, mixv(TILT[prev], TILT[cur], e));
+    gl.uniform1f(U.sy, reduce ? 0 : scrollY / innerHeight * 1.6); gl.uniform1f(U.ht, ht);
+    gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.POINTS, 0, N);
+  }
+  function loop(now) { frame(now); if (!document.hidden) requestAnimationFrame(loop); }
   document.addEventListener('visibilitychange', function () { if (!document.hidden) requestAnimationFrame(loop); });
   if (reduce) {
-    draw(performance.now());
-    addEventListener('scroll', function () { sp = scrollP; requestAnimationFrame(draw); }, { passive: true });
-    addEventListener('resize', function () { requestAnimationFrame(draw); });
+    frame(performance.now());
+    addEventListener('scroll', function () { requestAnimationFrame(frame); }, { passive: true });
+    addEventListener('resize', function () { requestAnimationFrame(frame); });
   } else requestAnimationFrame(loop);
 })();
 </script>
