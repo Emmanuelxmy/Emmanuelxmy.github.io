@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,6 +39,10 @@ nav.links a{text-decoration:none;color:var(--muted)} nav.links a:hover{color:var
 .btn.g{color:var(--ink);background:rgba(246,236,216,.06);box-shadow:inset 0 0 0 1.5px rgba(246,236,216,.45)}
 .btn.g:hover{background:rgba(246,236,216,.12)}
 header.top .btn{padding:10px 18px;font-size:14px}
+.lang{order:3;font:700 13px var(--body);letter-spacing:.08em;color:var(--ink);background:transparent;border:1.5px solid rgba(246,236,216,.4);border-radius:999px;padding:8px 12px;cursor:pointer}
+.lang:hover{border-color:var(--ink)}
+nav.links{order:1}
+header.top .btn{order:2}
 
 /* photo placeholder */
 .ph{position:relative;overflow:hidden;border-radius:18px;display:grid;place-items:center;text-align:center;padding:18px;color:var(--brass-l);
@@ -55,7 +59,6 @@ header.top .btn{padding:10px 18px;font-size:14px}
 /* hero */
 .hero{position:relative;overflow:hidden;background:
  radial-gradient(60% 70% at 82% 35%,rgba(224,180,90,.20),transparent 60%),
- radial-gradient(70% 90% at 0% 100%,rgba(125,29,44,.75),transparent 60%),
  linear-gradient(160deg,var(--felt) 0%,var(--felt-d) 55%,#081f18 100%)}
 .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding-top:76px;padding-bottom:96px}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.16em;font-size:12.5px;font-weight:700;color:var(--brass-l)}
@@ -84,7 +87,7 @@ header.top .btn{padding:10px 18px;font-size:14px}
 .hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;z-index:3;background:linear-gradient(90deg,var(--brass-d),var(--brass-l) 50%,var(--brass-d))}
 
 /* marquee */
-.marquee{background:linear-gradient(180deg,var(--wine),var(--oxblood));overflow:hidden;border-bottom:1px solid rgba(0,0,0,.4)}
+.marquee{background:var(--felt-d);border-top:1px solid rgba(224,180,90,.25);overflow:hidden;border-bottom:1px solid rgba(0,0,0,.4)}
 .marquee .track{display:flex;width:max-content;animation:slide 32s linear infinite}
 .marquee span{font:400 20px/1 var(--disp);color:var(--brass-l);padding:18px 0;white-space:nowrap}
 .marquee span:after{content:"✦";color:var(--brass);margin:0 26px;font-size:14px;vertical-align:3px}
@@ -101,7 +104,7 @@ h2 em{font:400 1.05em var(--script);color:var(--brass-l);font-style:normal}
 .chip{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;font-weight:700;border:1.5px dashed var(--brass);color:var(--brass-l);border-radius:999px;padding:6px 12px}
 
 /* this week */
-.week{background:radial-gradient(80% 60% at 100% 0%,rgba(125,29,44,.35),transparent 60%),var(--night2)}
+.week{background:var(--night2)}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .card{position:relative;background:linear-gradient(180deg,#2b211b,#1f1813);border-radius:20px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 40px -24px rgba(0,0,0,.9),inset 0 0 0 1px var(--line);}
 .card .ph{border-radius:0;height:170px;box-shadow:none}
@@ -121,7 +124,6 @@ h2 em{font:400 1.05em var(--script);color:var(--brass-l);font-style:normal}
 /* booking */
 .book{background:
  radial-gradient(70% 80% at 0% 0%,rgba(224,180,90,.14),transparent 60%),
- radial-gradient(60% 80% at 100% 100%,rgba(125,29,44,.6),transparent 60%),
  linear-gradient(180deg,var(--felt),var(--felt-d));overflow:hidden}
 .book .wrap{display:grid;grid-template-columns:.95fr 1.05fr;gap:52px;align-items:center;position:relative;z-index:1}
 .book ul{list-style:none;padding:0;margin-top:24px;display:grid;gap:14px}
@@ -141,7 +143,7 @@ form .btn{grid-column:1/-1;padding:15px}
 .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 figure{position:relative;background:linear-gradient(180deg,#fbf1dc,#efdfbf);color:#2a1d14;border-radius:18px;padding:34px 26px 24px;box-shadow:0 24px 40px -24px rgba(0,0,0,.9)}
 figure:nth-child(1){transform:rotate(-1.2deg)} figure:nth-child(3){transform:rotate(1.2deg)}
-figure:before{content:"“";position:absolute;top:-22px;left:20px;font:400 84px/1 var(--disp);color:var(--wine)}
+figure:before{content:"“";position:absolute;top:-22px;left:20px;font:400 84px/1 var(--disp);color:var(--felt)}
 blockquote{font:600 19px/1.4 var(--body)}
 figcaption{margin-top:16px;font-size:13px;color:#7a6650;display:flex;align-items:center;gap:8px}
 figcaption:before{content:"★★★★★";color:#c8922c;letter-spacing:1px}
@@ -195,6 +197,7 @@ footer .logo{color:var(--ink);font-size:20px}
 
 <header class="top"><div class="wrap">
  <a class="logo" href="#"><i>B</i>La Brass</a>
+ <button class="lang" id="lang" type="button" aria-label="Français / English">FR</button>
  <nav class="links"><a href="#semaine">Cette semaine</a><a href="#photos">Photos</a><a href="#reserver">Réserver</a><a href="#visit">Heures</a></nav>
  <a class="btn p" href="#reserver">Réserver une table</a>
 </div></header>
@@ -323,17 +326,31 @@ footer .logo{color:var(--ink);font-size:20px}
 
 <script>
 (function(){
+ var M={"Première version préparée pour Bar La Brass par Emmanuel Maclaren-Yansouni : pas encore en ligne. Les cases « Votre photo ici » et les éléments marqués « Exemple » ou « À confirmer » seront remplacés par vos vrais renseignements.": "First version prepared for Bar La Brass by Emmanuel Maclaren-Yansouni: not online yet. The “Your photo here” spots and anything marked “Example” or “To confirm” will be replaced with your real details.", "Cette semaine": "This week", "Réserver": "Book", "Heures": "Hours", "Réserver une table": "Book a table", "Rue Principale · Aylmer": "Rue Principale · Aylmer", "Votre taverne": "Your local", "de quartier.": "tavern.", "Billard · Dards · Karaoké · Musique live": "Pool · Darts · Karaoke · Live music", "Une place où le personnel se souvient de votre commande. Ouvert tous les jours dès 9 h, jusqu’à 3 h du jeudi au samedi.": "The kind of place where the staff remember your order. Open every day from 9 a.m., until 3 a.m. Thursday to Saturday.", "Appeler (819) 685-0055": "Call (819) 685-0055", "· 39 avis Google": "· 39 Google reviews", "Votre photo ici": "Your photo here", "Le comptoir, une soirée pleine, l’enseigne de la façade… ou autre chose : votre logo, une affiche.": "The bar, a packed night, the sign out front… or something else: your logo, a poster.", "Ouvert": "Open", "Tous les jours": "Every day", "dès 9 h": "from 9 a.m.", "Jeudi au samedi": "Thu – Sat", "jusqu’à 3 h": "until 3 a.m.", "Téléphone": "Phone", "Billard": "Pool", "Ligue de dards": "Darts league", "Karaoké": "Karaoke", "Spécial de la semaine": "Weekly special", "Au bar": "At the bar", "cette semaine": "this week", "Vous changez cette section vous-même, en une minute, du téléphone. Fini les appels pour savoir « c’est quoi le spécial ce soir? ».": "You update this section yourself, in a minute, from your phone. No more calls asking “what’s the special tonight?”.", "✎ Vous modifiez ceci": "✎ You edit this", "Choix des clients": "Customer favourite", "Les tables de billard": "The pool tables", "Les tables vous attendent, seul ou en gang.": "The tables are waiting, solo or with the crew.", "Le coin dards, la ligue en action": "The darts area, the league in action", "Dards": "Darts", "Un coin dards à part, avec des cibles bien entretenues. La ligue joue ici.": "A separate darts area with well-kept boards. The league plays here.", "À confirmer": "To confirm", "Une soirée karaoké": "A karaoke night", "Soir et heure à confirmer.": "Night and time to confirm.", "Exemple": "Example", "…ou autre chose : l’ardoise des spéciaux": "…or something else: the specials board", "Vous l’affichez vous-même, en une minute.": "You post it yourself, in a minute.", "…ou autre chose : le bar à 17 h": "…or something else: the bar at 5 p.m.", "5 à 7": "Happy hour", "Vos prix et vos heures.": "Your prices and times.", "Un band sur la scène… ou votre affiche": "A band on stage… or your poster", "Musique live": "Live music", "Le prochain spectacle sur la scène : date et groupe à confirmer.": "The next show on stage: date and band to confirm.", "L’ambiance": "The vibe at", "Ici, vos vraies photos. Des photos prises au cellulaire, c’est parfait.": "Your real photos go here. Phone photos are perfect.", "La plus belle : le bar un soir plein": "Your best one: the bar on a busy night", "Le comptoir": "The bar counter", "L’équipe derrière le bar": "The team behind the bar", "…ou autre chose : la façade, l’enseigne": "…or something else: the front, the sign", "Une fête, une gang,": "A party, a crew,", "une ligue?": "a league?", "Vos clients réservent une table ici au lieu d’appeler au bar. Vous recevez la demande par écrit et vous confirmez quand vous avez une minute.": "Customers book a table here instead of calling the bar. You get the request in writing and confirm it when you have a minute.", "Moins d’appels derrière le bar": "Fewer calls behind the bar", "Anniversaires, partys de bureau et ligues : tout arrive par écrit": "Birthdays, office parties and leagues: everything arrives in writing", "Vous confirmez chaque demande, vous gardez le contrôle": "You confirm every request, you stay in control", "Demande de réservation": "Booking request", "Nom": "Name", "Moment": "Time", "Soirée": "Evening", "Fin de soirée": "Late night", "Après-midi": "Afternoon", "Combien de personnes?": "How many people?", "2 à 4": "2 to 4", "5 à 10": "5 to 10", "11 à 20": "11 to 20", "Plus de 20": "More than 20", "Juste pour le plaisir": "Just for fun", "Anniversaire": "Birthday", "Party de bureau": "Office party", "Autre": "Other", "Précisions (optionnel)": "Details (optional)", "Envoyer ma demande": "Send my request", "Démo seulement : sur votre vrai site, cette demande arrive tout de suite dans votre boîte courriel. Rien n’a été envoyé.": "Demo only: on your real site, this request lands in your inbox right away. Nothing was sent.", "4,2 ★ · 39 avis Google": "4.2 ★ · 39 Google reviews", "4,2": "4.2", "Ce que les": "What the", "habitués": "regulars", "disent": "say", "Avis Google": "Google review", "Nous trouver": "Find us", "200, rue Principale": "200 Rue Principale", "Aylmer, Gatineau (Québec) J9H 5G3": "Aylmer, Gatineau, QC J9H 5G3", "Itinéraire": "Directions", "Lundi": "Monday", "Mardi": "Tuesday", "Mercredi": "Wednesday", "Jeudi": "Thursday", "Vendredi": "Friday", "Samedi": "Saturday", "Dimanche": "Sunday", "9 h – minuit": "9 a.m. – midnight", "9 h – 2 h": "9 a.m. – 2 a.m.", "9 h – 3 h": "9 a.m. – 3 a.m.", "200, rue Principale, Aylmer · (819) 685-0055": "200 Rue Principale, Aylmer · (819) 685-0055", "Site par Emmanuel Maclaren-Yansouni · emmanuelxmy.github.io": "Site by Emmanuel Maclaren-Yansouni · emmanuelxmy.github.io", "Appeler": "Call", "Votre nom": "Your name", "Pour vous confirmer": "To confirm with you", "ex. on aimerait être près des tables de billard": "e.g. we’d like to be near the pool tables", "Votre affiche ici": "Your poster here"}, L=localStorage, lang='en';
+ try{lang=L.getItem('brass-lang')||'en'}catch(e){}
+ var nodes=[],ph=[];
+ (function walk(n){for(var c=n.firstChild;c;c=c.nextSibling){if(c.nodeType===3){var k=c.nodeValue.trim();if(M[k])nodes.push([c,c.nodeValue,k]);}else if(c.nodeType===1&&c.tagName!=='SCRIPT'&&c.tagName!=='STYLE')walk(c);}})(document.body);
+ document.querySelectorAll('[placeholder]').forEach(function(e){var k=e.getAttribute('placeholder');if(M[k])ph.push([e,k]);});
  var H=[[540,1440],[540,1440],[540,1560],[540,1620],[540,1620],[540,1620],[540,1440]];
- var D=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
- function fmt(m){var h=Math.floor(m/60)%24,mm=m%60;if(!h&&!mm)return 'minuit';return h+' h'+(mm?' '+String(mm).padStart(2,'0'):'');}
+ var T={fr:{d:['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'],open:'Ouvert',closed:'Fermé',until:'jusqu’à ',opens:'Ouvre ',today:'aujourd’hui',at:' à '},
+        en:{d:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],open:'Open',closed:'Closed',until:'until ',opens:'Opens ',today:'today',at:' at '}};
+ function fmt(m,l){var h=Math.floor(m/60)%24,mm=m%60;if(l==='en'){if(!h&&!mm)return 'midnight';var ap=h>=12?'p.m.':'a.m.',hh=h%12||12;return hh+(mm?':'+String(mm).padStart(2,'0'):'')+'\u00a0'+ap;}if(!h&&!mm)return 'minuit';return h+'\u00a0h'+(mm?' '+String(mm).padStart(2,'0'):'');}
  var p=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date());
  var g=function(k){return (p.find(function(x){return x.type===k})||{}).value};
  var d=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(g('weekday')), m=(+g('hour')%24)*60+(+g('minute'));
  var r=document.querySelector('#hrs tr[data-d="'+d+'"]'); if(r) r.className='now';
  var h=H[d], pv=H[(d+6)%7], late=m<pv[1]-1440, open=late||(m>=h[0]&&m<h[1]);
- var n=document.getElementById('neon'); n.className='neon '+(open?'on':'off');
- document.getElementById('st').textContent=open?'Ouvert':'Fermé';
- document.getElementById('sub').textContent=open?('jusqu’à '+fmt(late?pv[1]:h[1])):('Ouvre '+(m<h[0]?'aujourd’hui':D[(d+1)%7].toLowerCase())+' à '+fmt(m<h[0]?h[0]:H[(d+1)%7][0]));
+ function status(l){var t=T[l];
+  document.getElementById('neon').className='neon '+(open?'on':'off');
+  document.getElementById('st').textContent=open?t.open:t.closed;
+  document.getElementById('sub').textContent=open?(t.until+fmt(late?pv[1]:h[1],l)):(t.opens+(m<h[0]?t.today:t.d[(d+1)%7])+t.at+fmt(m<h[0]?h[0]:H[(d+1)%7][0],l));}
+ function set(l){lang=l;document.documentElement.lang=l;
+  nodes.forEach(function(x){x[0].nodeValue=l==='en'?x[1].replace(x[2],M[x[2]]):x[1];});
+  ph.forEach(function(x){x[0].setAttribute('placeholder',l==='en'?M[x[1]]:x[1]);});
+  document.getElementById('lang').textContent=l==='en'?'FR':'EN';
+  status(l);try{L.setItem('brass-lang',l)}catch(e){}}
+ document.getElementById('lang').addEventListener('click',function(){set(lang==='en'?'fr':'en');});
+ set(lang);
  document.getElementById('f').addEventListener('submit',function(e){e.preventDefault();var o=document.getElementById('ok');o.style.display='block';o.scrollIntoView({block:'nearest',behavior:'smooth'});});
 })();
 </script>
