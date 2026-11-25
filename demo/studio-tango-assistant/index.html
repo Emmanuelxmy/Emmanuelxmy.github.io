@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Studio Tango Montréal · assistant virtuel (démo non officielle)</title>
+<style>
+:root{--c:#7b1e2b;--ink:#1c2426;--muted:#5b6669;--line:#e2e5e7;--bg:#f7f7f5}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.warn{background:#111;color:#f4f4f4;font-size:13px;text-align:center;padding:9px 16px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header{padding:40px 0 8px}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c)}
+h1{font-size:clamp(28px,4.4vw,44px);line-height:1.1;margin:10px 0 12px;letter-spacing:-.01em}
+.lead{font-size:18px;color:var(--muted);max-width:60ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;align-items:start;padding:24px 0 120px}
+.try{display:inline-flex;align-items:center;gap:10px;margin-top:22px;background:var(--c);color:#fff;font-weight:700;padding:12px 18px;border-radius:999px;font-size:16px}
+.try span{font-size:20px;line-height:1}
+.attach{margin-top:26px;background:#fff;border:2px solid var(--c);border-radius:16px;padding:22px;max-width:760px}
+.attach h2{font-size:20px;margin-bottom:8px}
+.attach ol{padding-left:22px;margin-top:12px;display:grid;gap:6px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h2{font-size:17px;margin-bottom:10px}
+.card ul{padding-left:20px;display:grid;gap:6px}
+.small{font-size:13px;color:var(--muted)}
+.small a{color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:14px;color:var(--muted)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="warn">Démo non officielle préparée par Emmanuel Maclaren-Yansouni, concepteur web, à partir du site public de Studio Tango Montréal. Non affiliée à Studio Tango Montréal.</div>
+<div class="wrap">
+<header>
+<div class="eyebrow">École de tango argentin · Montréal</div>
+<h1>Un assistant qui répond aux questions de vos clients, même à 23 h.</h1>
+<p class="lead">Posez-lui une question sur Studio Tango Montréal. Il répond seulement à partir des informations de votre site, en français ou en anglais.</p>
+<p class="try">Essayez-le : cliquez sur la bulle en bas à droite <span aria-hidden="true">↘</span></p>
+<section class="attach">
+<h2>Il s'ajoute à votre site actuel</h2>
+<p>Vous gardez <strong>studiotango.ca</strong> tel quel : pas de nouveau site, pas de refonte. La même bulle apparaît en bas à droite de chacune de vos pages, comme sur cette page.</p>
+<ol>
+<li>Je prépare l'assistant avec les informations de votre site.</li>
+<li>J'ajoute une seule ligne de code à votre site (ou je vous l'envoie et vous la collez). Ça fonctionne avec la plupart des sites.</li>
+<li>Vos clients cliquent sur la bulle et obtiennent une réponse, même le soir et la fin de semaine.</li>
+</ol>
+</section>
+</header>
+<div class="grid">
+<div class="card">
+<h2>Ce qu'il fait</h2>
+<ul>
+<li>Répond aux questions répétitives : tarifs, horaires, adresse, politiques.</li>
+<li>Quand il n'est pas certain, il le dit : « Je transmets votre question à l'équipe ».</li>
+<li>Transforme l'intérêt en demande de rendez-vous (nom, contact, moment souhaité) envoyée par courriel à l'équipe.</li>
+<li>Répond en français, ou en anglais si le client écrit en anglais.</li>
+<li>Ne donne jamais d'avis médical ou juridique.</li>
+</ul>
+</div>
+<div class="card">
+<h2>Ce qu'il sait sur Studio Tango Montréal</h2>
+<ul><li>Coordonnées</li><li>Les cours</li><li>Horaire et tarifs, session novembre-décembre 2026 (taxes incluses)</li><li>Pratiques et milongas</li><li>Non précisé sur le site (transmettre à l&#39;équipe)</li></ul>
+<p class="small" style="margin-top:12px">Informations relevées le 2026-11-23 sur : <a href="https://studiotango.ca/bienvenue" rel="nofollow noopener" target="_blank">studiotango.ca/bienvenue</a> · <a href="https://studiotango.ca/cours" rel="nofollow noopener" target="_blank">studiotango.ca/cours</a> · <a href="https://studiotango.ca/milongas-montreal" rel="nofollow noopener" target="_blank">studiotango.ca/milongas-montreal</a></p>
+</div>
+</div>
+</div>
+<footer><div class="wrap">Emmanuel Maclaren-Yansouni · Concepteur web, Montréal · <a href="https://emmanuelxmy.github.io">emmanuelxmy.github.io</a> · (438) 722-1921</div></footer>
+<script src="https://site-assistant.emmanuelxmy.workers.dev/widget.js?v=mwu3d1qe" data-business="studio-tango" defer></script>
+</body>
+</html>
